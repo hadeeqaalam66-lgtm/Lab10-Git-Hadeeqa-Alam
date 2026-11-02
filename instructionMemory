@@ -1,0 +1,19 @@
+module instructionMemory #(
+    parameter OPERAND_LENGTH = 31)(
+    input [OPERAND_LENGTH:0] instAddress,
+    output reg [31:0] instruction
+);
+
+    reg [31:0] memory [0:255];
+
+    initial begin
+        // Initialize instruction memory with the pre-compiled machine code program
+        $readmemh("program.mem", memory);
+    end
+
+    always @(*) begin
+        // Fetch instruction using word-aligned address slicing (drops lower 2 bits, indexes 256-word memory)[cite: 11]
+        instruction = memory[instAddress[9:2]];
+    end
+
+endmodule
